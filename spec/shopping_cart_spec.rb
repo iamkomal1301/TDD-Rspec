@@ -1,9 +1,8 @@
-# spec/shopping_cart_spec.rb
 require 'shopping_cart'
 
 RSpec.describe ShoppingCart do
-  it 'initializes with empty cart' do
+  it 'starts empty' do
     cart = ShoppingCart.new
-    expect(cart.total).to eq(0)
+    expect(cart.items).to eq({})
   end
 end
