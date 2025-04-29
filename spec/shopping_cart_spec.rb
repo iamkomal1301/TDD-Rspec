@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'shopping_cart'
 
 RSpec.describe ShoppingCart do
@@ -52,11 +54,11 @@ RSpec.describe ShoppingCart do
     cart = ShoppingCart.new
     cart.add('apple', 2)
     prices = { 'apple' => 5.0 }
-    
+
     cart.apply_promo('SAVE10')
-    
-    expected_price = (2 * 5.0) - ((2 * 5.0) * 0.10) 
-    
+
+    expected_price = (2 * 5.0) - ((2 * 5.0) * 0.10)
+
     expect(cart.total_price(prices)).to eq(expected_price)
   end
 
@@ -64,7 +66,7 @@ RSpec.describe ShoppingCart do
     cart = ShoppingCart.new
     cart.add('apple', 2)
     prices = { 'apple' => 5.0 }
-    cart.apply_promo('INVALIDCODE') 
+    cart.apply_promo('INVALIDCODE')
 
     expected_price = 2 * 5.0
     expect(cart.total_price(prices)).to eq(expected_price)

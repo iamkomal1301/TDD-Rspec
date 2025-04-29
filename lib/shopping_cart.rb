@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # lib/shopping_cart.rb
 class ShoppingCart
   attr_reader :items
@@ -29,17 +31,17 @@ class ShoppingCart
   end
 
   def apply_promo(code)
-    case code
-    when 'SAVE10'
-      @promo_discount = 0.10  # Apply a 10% discount
-    else
-      @promo_discount = 0.0  # No discount for unrecognized codes
-    end
+    @promo_discount = case code
+                      when 'SAVE10'
+                        0.10 # Apply a 10% discount
+                      else
+                        0.0 # No discount for unrecognized codes
+                      end
   end
 
   def total_price(prices = {})
     total = @items.sum { |item, qty| (prices[item] || 0) * qty }
-    discount = total * @promo_discount  # Apply the discount
-    (total - discount).round(2)  # Subtract the discount from the total and round it
+    discount = total * @promo_discount # Apply the discount
+    (total - discount).round(2) # Subtract the discount from the total and round it
   end
 end
