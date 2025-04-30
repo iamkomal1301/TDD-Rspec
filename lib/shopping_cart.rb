@@ -1,14 +1,6 @@
-# frozen_string_literal: true
-
-require_relative 'discounts'
-
+require_relative '../lib/discounts'
 class ShoppingCart
   attr_reader :items, :promo_discount, :discount_strategy
-
-  PROMO_CODES = {
-    'SAVE10' => 0.10,  # 10% discount
-    'SAVE20' => 0.20   # 20% discount (example for future)
-  }.freeze
 
   def initialize
     @items = {}
@@ -30,11 +22,7 @@ class ShoppingCart
   end
 
   def apply_promo(code)
-    if PROMO_CODES.key?(code)
-      @promo_discount = PROMO_CODES[code]
-    else
-      @promo_discount = 0.0
-    end
+    @promo_discount = code == 'SAVE10' ? 0.10 : 0.0
   end
 
   def update_quantity(item, new_qty)
@@ -54,6 +42,14 @@ class ShoppingCart
     apply_additional_discounts(subtotal_after_promo).round(2)
   end
 
+  def total_items
+    @items.keys.count  # Returns the count of unique items
+  end
+
+  def total_quantity
+    @items.values.sum  # Returns the total quantity of all items
+  end
+
   private
 
   def calculate_subtotal(prices)
@@ -65,10 +61,6 @@ class ShoppingCart
   end
 
   def apply_additional_discounts(subtotal)
-    if @discount_strategy
-      @discount_strategy.apply(subtotal)
-    else
-      subtotal
-    end
+    @discount_strategy ? @discount_strategy.apply(subtotal) : subtotal
   end
 end
