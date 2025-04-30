@@ -83,4 +83,26 @@ RSpec.describe ShoppingCart do
     cart = ShoppingCart.new
     expect { cart.update_quantity('banana', 3) }.to raise_error('Item not found')
   end
+
+  it 'applies a percentage discount via strategy' do
+    cart = ShoppingCart.new
+    cart.add('apple', 2)
+    prices = { 'apple' => 10 }
+
+    discount = PercentageDiscount.new(20) # 20% off
+    cart.apply_discount(discount)
+
+    expect(cart.total_price(prices)).to eq(16.0)
+  end
+
+  it 'applies a fixed amount discount via strategy' do
+    cart = ShoppingCart.new
+    cart.add('banana', 2)
+    prices = { 'banana' => 5 }
+
+    discount = FixedDiscount.new(3) # flat $3 off
+    cart.apply_discount(discount)
+
+    expect(cart.total_price(prices)).to eq(7.0)
+  end
 end

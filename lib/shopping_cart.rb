@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require_relative 'discounts'
 # lib/shopping_cart.rb
 class ShoppingCart
   attr_reader :items
@@ -50,5 +51,16 @@ class ShoppingCart
     raise ArgumentError, 'Quantity must be > 0' unless new_qty.positive?
 
     @items[item] = new_qty
+  end
+
+  def apply_discount(discount_strategy)
+    @discount_strategy = discount_strategy
+  end
+
+  def total_price(prices = {})
+    subtotal = @items.sum { |item, qty| (prices[item] || 0) * qty }
+    subtotal -= subtotal * @promo_discount
+    final_total = @discount_strategy ? @discount_strategy.apply(subtotal) : subtotal
+    final_total.round(2)
   end
 end
