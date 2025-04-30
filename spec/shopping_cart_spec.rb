@@ -71,4 +71,16 @@ RSpec.describe ShoppingCart do
     expected_price = 2 * 5.0
     expect(cart.total_price(prices)).to eq(expected_price)
   end
+
+  it 'updates quantity of an existing item' do
+    cart = ShoppingCart.new
+    cart.add('apple', 2)
+    cart.update_quantity('apple', 5)
+    expect(cart.items['apple']).to eq(5)
+  end
+
+  it 'raises error when updating a non-existent item' do
+    cart = ShoppingCart.new
+    expect { cart.update_quantity('banana', 3) }.to raise_error('Item not found')
+  end
 end

@@ -44,4 +44,11 @@ class ShoppingCart
     discount = total * @promo_discount # Apply the discount
     (total - discount).round(2) # Subtract the discount from the total and round it
   end
+
+  def update_quantity(item, new_qty)
+    raise 'Item not found' unless @items.key?(item)
+    raise ArgumentError, 'Quantity must be > 0' unless new_qty.positive?
+
+    @items[item] = new_qty
+  end
 end
