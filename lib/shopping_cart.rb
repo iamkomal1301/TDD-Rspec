@@ -1,4 +1,7 @@
-require_relative '../lib/discounts'
+# lib/shopping_cart.rb
+
+require_relative 'discount_strategies'
+
 class ShoppingCart
   attr_reader :items, :promo_discount, :discount_strategy
 
@@ -43,11 +46,11 @@ class ShoppingCart
   end
 
   def total_items
-    @items.keys.count  # Returns the count of unique items
+    @items.keys.count
   end
 
   def total_quantity
-    @items.values.sum  # Returns the total quantity of all items
+    @items.values.sum
   end
 
   private

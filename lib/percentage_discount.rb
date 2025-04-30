@@ -1,4 +1,5 @@
 # lib/percentage_discount.rb
+
 require_relative 'discount_strategy'
 
 class PercentageDiscount < DiscountStrategy

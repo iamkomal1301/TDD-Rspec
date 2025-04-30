@@ -1,4 +1,5 @@
 # lib/fixed_discount.rb
+
 require_relative 'discount_strategy'
 
 class FixedDiscount < DiscountStrategy
