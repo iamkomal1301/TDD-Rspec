@@ -1,26 +1,24 @@
 # frozen_string_literal: true
 
 require_relative 'discounts'
-# lib/shopping_cart.rb
+
 class ShoppingCart
-  attr_reader :items
+  attr_reader :items, :promo_discount, :discount_strategy
+
+  PROMO_CODES = {
+    'SAVE10' => 0.10,  # 10% discount
+    'SAVE20' => 0.20   # 20% discount (example for future)
+  }.freeze
 
   def initialize
     @items = {}
     @promo_discount = 0.0
+    @discount_strategy = nil
   end
 
   def add(item, quantity = 1)
     @items[item] ||= 0
     @items[item] += quantity
-  end
-
-  def total_items
-    @items.keys.count
-  end
-
-  def total_quantity
-    @items.values.sum
   end
 
   def remove(item)
@@ -32,18 +30,11 @@ class ShoppingCart
   end
 
   def apply_promo(code)
-    @promo_discount = case code
-                      when 'SAVE10'
-                        0.10 # Apply a 10% discount
-                      else
-                        0.0 # No discount for unrecognized codes
-                      end
-  end
-
-  def total_price(prices = {})
-    total = @items.sum { |item, qty| (prices[item] || 0) * qty }
-    discount = total * @promo_discount # Apply the discount
-    (total - discount).round(2) # Subtract the discount from the total and round it
+    if PROMO_CODES.key?(code)
+      @promo_discount = PROMO_CODES[code]
+    else
+      @promo_discount = 0.0
+    end
   end
 
   def update_quantity(item, new_qty)
@@ -58,9 +49,26 @@ class ShoppingCart
   end
 
   def total_price(prices = {})
-    subtotal = @items.sum { |item, qty| (prices[item] || 0) * qty }
-    subtotal -= subtotal * @promo_discount
-    final_total = @discount_strategy ? @discount_strategy.apply(subtotal) : subtotal
-    final_total.round(2)
+    subtotal = calculate_subtotal(prices)
+    subtotal_after_promo = apply_promo_discount(subtotal)
+    apply_additional_discounts(subtotal_after_promo).round(2)
+  end
+
+  private
+
+  def calculate_subtotal(prices)
+    @items.sum { |item, qty| (prices[item] || 0) * qty }
+  end
+
+  def apply_promo_discount(subtotal)
+    subtotal - (subtotal * @promo_discount)
+  end
+
+  def apply_additional_discounts(subtotal)
+    if @discount_strategy
+      @discount_strategy.apply(subtotal)
+    else
+      subtotal
+    end
   end
 end
