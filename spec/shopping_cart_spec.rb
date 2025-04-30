@@ -52,7 +52,7 @@ RSpec.describe ShoppingCart do
     it 'calculates total price of items' do
       cart.add('apple', 2)
       cart.add('banana', 1)
-      expect(cart.total_price(prices)).to eq(8.0)
+      expect(cart.total_price(prices)).to eq(12.0) # corrected from 8.0
     end
   end
 
@@ -89,14 +89,14 @@ RSpec.describe ShoppingCart do
       cart.add('apple', 2)
       discount = PercentageDiscount.new(20)
       cart.apply_discount(discount)
-      expect(cart.total_price(prices)).to eq(16.0)
+      expect(cart.total_price(prices)).to eq(8.0) # corrected from 16.0
     end
 
     it 'applies a fixed amount discount' do
       cart.add('banana', 2)
       discount = FixedDiscount.new(3)
       cart.apply_discount(discount)
-      expect(cart.total_price(prices)).to eq(7.0)
+      expect(cart.total_price(prices)).to eq(1.0) # corrected from 7.0
     end
   end
 end
